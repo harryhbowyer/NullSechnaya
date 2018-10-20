@@ -4,10 +4,19 @@ const settings = require("./settings.json");
 const swag = require("eve-swagger");
 const prefix = settings.prefix;
 const snekfetch = require("snekfetch");
-
+const mysql = require('mysql');
 client.login(settings.private.nsh);
 
-
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: settings.mysql.user,
+  password: settings.mysql.password,
+  database: settings.mysql.database
+});
+connection.connect((err) => {
+  if (err) throw err;
+  console.log("Connected to Eve_SDE!");
+});
 let esi = swag({
   service: 'https://esi.tech.ccp.is',
   source: 'tranquility',
@@ -28,37 +37,73 @@ client.on("message", async message => {
   var systems = messageSanitized.replace(`${prefix}hit `, '');
   var sArray = systems.split(" ");
 
-
+let systemobj = [];
+  
 if (sArray.length === 2 && command === true){
+  var systemPromise = new Promise((resolve, reject) => {
+              
+                connection.query('SELECT * from mapSolarSystems where solarSystemName like ' + "'%" + sArray[0] + "%'", (err, result) => {
+                  //shipNames.push(result[0].typeName);
+                  if (err) throw err;
+                  if (result) {
+                    console.log(result[0].x)
+                    systemobj.push({
+                      "from": {
+                      "x": result[0].x,
+                      "y": result[0].y,
+                      "z": result[0].z,
+                        "name": result[0].solarSystemName
+                      }
+                    })
+                  }
+                })
+                connection.query('SELECT * from mapSolarSystems where solarSystemName like ' + "'%" + sArray[1] + "%'", (err, result) => {
+                  //shipNames.push(result[0].typeName);
+                  if (err) throw err;
+                  if (result) {
+                    console.log(result[0].x)
+                    systemobj.push({ 
+                    "to" : {
+                      "x": result[0].x,
+                      "y": result[0].y,
+                      "z": result[0].z,
+                      "name": result[0].solarSystemName
+                      }
+                    })
+                  }
+                  console.log(systemobj.length);
+    console.log(systemobj);
+              if (systemobj.length === 2){
+                
+                resolve(systemobj);
+              }
+                })
+    
+            });
 
 
-  var systemFromID = await swag.solarSystems.search(sArray[0]);
-  var systemToID = await swag.solarSystems.search(sArray[1]);
-  if (typeof systemToID === 'undefined' || typeof systemFromID === 'undefined'){
+//   var systemFromID = await swag.solarSystems.search(sArray[0]);
+//   var systemToID = await swag.solarSystems.search(sArray[1]);
+//   if (typeof systemToID === 'undefined' || typeof systemFromID === 'undefined'){
 
-    if (typeof systemToID === 'undefined'){
+//     if (typeof systemToID === 'undefined'){
 
-      message.reply(sArray[1] + " is not a valid Solar System! Please review and correct.");
+//       message.reply(sArray[1] + " is not a valid Solar System! Please review and correct.");
 
-    }
+//     }
 
-    if (typeof systemFromID === 'undefined'){
+//     if (typeof systemFromID === 'undefined'){
 
-      message.reply(sArray[0] + " is not a valid Solar System! Please review and correct.");
+//       message.reply(sArray[0] + " is not a valid Solar System! Please review and correct.");
 
-    }
-
-
-  } else if (systemFromID.length === 1 && systemToID.length === 1) {
+//     }
 
 
-
-    var systemFromInfo = await swag.solarSystems(systemFromID).info();
-    console.log(systemFromInfo);
-    var systemToInfo = await swag.solarSystems(systemToID).info();
-    console.log(systemToInfo);
-    var systemFrom = systemFromInfo.position;
-    var systemTo = systemToInfo.position;
+//   } else 
+  systemPromise.then((systemobj) => {
+    var systemFrom = systemobj[0].from;
+    var systemTo = systemobj[1].to;
+     if (systemobj.length === 2) {
 
     function calcDistanceinLightyears(systemFrom, systemTo) {
       var x1 = systemFrom.x;
@@ -72,11 +117,11 @@ if (sArray.length === 2 && command === true){
     }
 
     const dotlan = "http://evemaps.dotlan.net/jump/"
-    var supers = dotlan + "Nyx,544/" + systemFromInfo.name + ":" + systemToInfo.name;
-    var cap = dotlan + "Archon,544/" + systemFromInfo.name + ":" + systemToInfo.name;
-    var blops = dotlan + "Panther,544/" + systemFromInfo.name + ":" + systemToInfo.name;
-    var rorq = dotlan + "Rorqual,544/" + systemFromInfo.name + ":" + systemToInfo.name;
-    var jf = dotlan + "Nomad,544/" + systemFromInfo.name + ":" + systemToInfo.name;
+    var supers = dotlan + "Nyx,544/" + systemFrom.name + ":" + systemTo.name;
+    var cap = dotlan + "Archon,544/" + systemFrom.name + ":" + systemTo.name;
+    var blops = dotlan + "Panther,544/" + systemFrom.name + ":" + systemTo.name;
+    var rorq = dotlan + "Rorqual,544/" + systemFrom.name + ":" + systemTo.name;
+    var jf = dotlan + "Nomad,544/" + systemFrom.name + ":" + systemTo.name;
 
 
     let embed = new Discord.RichEmbed()
@@ -84,25 +129,25 @@ if (sArray.length === 2 && command === true){
     if (calcDistanceinLightyears(systemFrom, systemTo) <= 6){
 
 
-      embed.addField("Jump Distance rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Supers/Titans](" + supers + ") \n[Carriers/Fax/Dreads](" + cap + ") \n[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
+      embed.addField("Jump Distance from " + systemFrom.name + " to " + systemTo.name + " rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Supers/Titans](" + supers + ") \n[Carriers/Fax/Dreads](" + cap + ") \n[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
      
 
 
     } else if (calcDistanceinLightyears(systemFrom, systemTo) <= 7){
 
-      embed.addField("Jump Distance rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Carriers/Fax/Dreads](" + cap + ") \n[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
+      embed.addField("Jump Distance from " + systemFrom.name + " to " + systemTo.name + " rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Carriers/Fax/Dreads](" + cap + ") \n[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
       
       
 
     } else if (calcDistanceinLightyears(systemFrom, systemTo) <= 8){
 
-      embed.addField("Jump Distance rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
+      embed.addField("Jump Distance from " + systemFrom.name + " to " + systemTo.name + " rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[BLOPS](" + blops +") \n[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
       
       
 
     } else if (calcDistanceinLightyears(systemFrom, systemTo) <= 10){
 
-      embed.addField("Jump Distance rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
+      embed.addField("Jump Distance from " + systemFrom.name + " to " + systemTo.name + " rounded to (" + calcDistanceinLightyears(systemFrom, systemTo) + "LY)", "[Rorquals](" + rorq + ") \n[Jump Freighters](" + jf + ")")
      
       
 
@@ -121,13 +166,13 @@ if (sArray.length === 2 && command === true){
 
 
 
-  } else if (systemFromID.length > 1 || systemToID.length > 1) {
+  } else if (systemFrom.length > 1 || systemTo.length > 1) {
 
-    if (systemFromID.length > 1){
+    if (systemFrom.length > 1){
       var fromArray = [];
-    var flen = systemFromID.length;
+    var flen = systemFrom.length;
       for (var f = 0;  f < flen; f++) {
-        var sfID = await swag.solarSystems(systemFromID[f]).info();
+        var sfID = systemFrom[f];
         var fromName = sfID.name;
       fromArray.push(fromName);
       }
@@ -140,7 +185,7 @@ if (sArray.length === 2 && command === true){
       var toArray = [];
       var tlen = systemToID.length;
       for (var t = 0; t < tlen; t++) {
-        var stID = await swag.solarSystems(systemToID[t]).info();
+        var stID = systemTo[t];
         var toName = stID.name;
       toArray.push(toName);
     }
@@ -156,7 +201,7 @@ if (sArray.length === 2 && command === true){
 
 
 
-} 
+}) 
   
 if (sArray.length > 2 && command === true) {
 
@@ -171,6 +216,13 @@ message.reply("Command requires <to> <from> format.");
 
 }
 
+    
+    
+    
+    
+  }
+    
+   
 
 
 
