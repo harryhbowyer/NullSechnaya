@@ -1,0 +1,34 @@
+{
+  "name": "nshbot",
+  "version": "1.0.0",
+  "description": "Discord bot made for Nullsechnaya Sholupen",
+  "main": "index.js",
+  "dependencies": {
+    "countdown": "^2.6.0",
+    "discord.js": "^11.4.2",
+    "eve-swagger": "^0.3.3",
+    "file-system": "^2.2.2",
+    "moment": "^2.22.2",
+    "moment-countdown": "0.0.3",
+    "mumble": "^0.3.16",
+    "mysql": "^2.16.0",
+    "node-fetch": "^2.2.0",
+    "node-schedule": "^1.3.0",
+    "node-webshot": "^1.0.3",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.16",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "snekfetch": "^4.0.4",
+    "webshot": "^0.18.0",
+    "ws": "^6.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
