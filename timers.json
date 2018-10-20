@@ -1,1 +1,53 @@
-{"astrahus":{"armor":[{"id":1,"timeentered":"Fri Oct 19 2018 19:31:05 GMT+0000","expireson":"Thu Oct 25 2018 18:03:05 GMT+0000","system":"m-md3b","enteredby":"testTimerUser"}],"hull":[]},"azbel":{"armor":[],"hull":[]},"raitaru":{"armor":[],"hull":[]},"fortizar":{"armor":[],"hull":[]},"tatara":{"armor":[],"hull":[]},"athanor":{"armor":[],"hull":[]},"keepstar":{"armor":[],"hull":[]},"sotiyo":{"armor":[],"hull":[]},"spos":{"hull":[]},"mpos":{"hull":[]},"lpos":{"hull":[]},"poco":{"hull":[{"id":1,"type":"h","timeentered":"Sat Oct 20 2018 05:16:20 GMT+0000","expireson":"Sun Oct 21 2018 00:01:20 GMT+0000","system":"pf-346","enteredby":"Anure"}]}}
+{
+  "astrahus": {
+    "armor": [],
+    "hull": []
+  },
+  "azbel": {
+    "armor": [],
+    "hull": []
+  },
+  "raitaru": {
+    "armor": [],
+    "hull": []
+  },
+  "fortizar": {
+    "armor": [],
+    "hull": []
+  },
+  "tatara": {
+    "armor": [],
+    "hull": []
+  },
+  "athanor": {
+    "armor": [],
+    "hull": []
+  },
+  "keepstar": {
+    "armor": [],
+    "hull": []
+  },
+  "sotiyo": {
+    "armor": [],
+    "hull": []
+  },
+  "spos": {
+    "hull": []
+  },
+  "mpos": {
+    "hull": []
+  },
+  "lpos": {
+    "hull": []
+  },
+  "poco": {
+    "hull": [{
+      "id": 1,
+      "type": "h",
+      "timeentered": "Sat Oct 20 2018 05:16:20 GMT+0000",
+      "expireson": "Sun Oct 21 2018 00:01:20 GMT+0000",
+      "system": "pf-346",
+      "enteredby": "Anure"
+    }]
+  }
+}
