@@ -1,0 +1,11 @@
+{
+  "private": {
+    "bot" : "Token_Goes_Here"
+  },
+  "mysql": {
+  "user": "mysqlUsername",
+  "password": "mysqlPassword",
+  "database": "SDE_Database_Name"
+  },
+"prefix": "!"
+}
