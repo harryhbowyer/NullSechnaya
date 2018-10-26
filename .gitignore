@@ -19,12 +19,14 @@ pids
 *.pid
 
 *.seed
+tracker.js
 
 *.pid.lock
 
 # Keys
 
 *.pem
+*.png
 
 # Settings
 
