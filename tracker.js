@@ -148,7 +148,7 @@ client.on('connect', function(connection) {
           let names = [];
           let capList = [];
          console.log(shipNames.attackers[0].distance);
-          if (shipNames.attackers.length > 0 && shipNames.attackers[0].distance < 9) {
+          if (shipNames.attackers.length > 0) {
             for (s = 0; s < shipNames.attackers.length; s++) {
               for (c = 0; c < caps.length; c++) {
                 if (c === 21 && match.length === 0) {
@@ -176,12 +176,18 @@ client.on('connect', function(connection) {
                       Dclient.guilds.get("497260345908264960").channels.get("498269278961795093").send(embed);
                       console.log("IDK WHY THIS SHIT IS POSTING TWICE");
                     }
+                 
                 }
-                
-                if (shipNames.attackers[s].shipID === caps[c]) {
+                 if (shipNames.attackers[s].shipID === caps[c]) {
                   capList.push(shipNames.attackers[s].shipName);
+                    console.log("FOUND A DAMN SUPER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                   console.log("Cap List Length = " + capList.length);
+                   console.log("Found on Ship #" + s);
+                   console.log("Found on Cap Number" + c);
                   }
-                  if(s === shipNames.attackers.length && c === caps.length && capList.length >= 1){
+                
+                  if(s === shipNames.attackers.length && c === 21 && capList.length >= 1){
+                    console.log("RAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + capList);
                    var uniqueCaps = [...new Set(capList)];
                     let embed = new Discord.RichEmbed()
                     .setThumbnail('https://media.discordapp.net/attachments/200446934412951563/497972001185595393/nshlogosquish.png?width=410&height=406')
@@ -190,7 +196,7 @@ client.on('connect', function(connection) {
                     .addField("Distance: ", shipNames.attackers[0].distance + " LY", true)
                   .addField("Pilot(s) Invloved: ", shipNames.attackers.length, true)
                   .addField("Cap(s) Involved: ", uniqueCaps, true);
-                  Dclient.guilds.get("497260345908264960").channels.get("498269278961795093").send("@here " + shipNames.attackers[0].zkb);
+                  Dclient.guilds.get("497260345908264960").channels.get("498269278961795093").send("@Anure " + shipNames.attackers[0].zkb);
                   Dclient.guilds.get("497260345908264960").channels.get("498269278961795093").send(embed); 
                   } 
               }
