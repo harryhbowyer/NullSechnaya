@@ -27,7 +27,14 @@
     "nodemon": "^1.18.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deltatracker": "node src/deltatracker/deltatracker.js",
+    "deltatrackertest": "node src/deltatracker/deltatrackerTester.js",
+    "hit": "node src/hit/hit.js",
+    "thera": "node src/thera/thera.js",
+    "timerboard": "node src/timerboard/timerboard.js",
+    "timers": "node src/timers/timers.js",
+    "tracker": "node src/tracker/tracker.js",
+    "who": "node src/who/who.js"
   },
   "author": "",
   "license": "MIT"
